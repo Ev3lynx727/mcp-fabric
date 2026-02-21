@@ -1,0 +1,4 @@
+# Fabric MCP Requirements
+
+fastmcp>=2.8.1,<3.0.0
+fabric-mcp>=0.6.0
