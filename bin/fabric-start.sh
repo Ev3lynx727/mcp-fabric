@@ -6,10 +6,8 @@
 
 set -euo pipefail
 
-readonly RED='\033[0;31m'
-readonly GREEN='\033[0;32m'
 readonly BLUE='\033[0;34m'
-readonly MAGENTA='\033[0;35m'
+readonly GREEN='\033[0;32m'
 readonly NC='\033[0m'
 
 log_info() { echo -e "${BLUE}[INFO]${NC} $*"; }
@@ -24,9 +22,11 @@ FABRIC_BASE_URL="${FABRIC_BASE_URL:-http://127.0.0.1:8080}"
 export FABRIC_BASE_URL
 
 load_env() {
-    if [ -f "$FABRIC_DIR/.env" ]; then
+    local env_file="$FABRIC_DIR/.env"
+    if [ -f "$env_file" ]; then
         set -a
-        source "$FABRIC_DIR/.env"
+        # shellcheck source=/dev/null
+        source "$env_file"
         set +a
     fi
 }
@@ -57,7 +57,7 @@ wait_for_fabric() {
 }
 
 main() {
-    echo -e "${MAGENTA}🧵 Fabric MCP Starter${NC}"
+    echo "🧵 Fabric MCP Starter"
     echo
     
     load_env
