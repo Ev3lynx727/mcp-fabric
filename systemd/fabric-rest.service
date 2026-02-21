@@ -1,0 +1,16 @@
+[Unit]
+Description=Fabric REST API Server
+After=network.target
+
+[Service]
+Type=simple
+Environment="PATH=/home/ev3lynx/.local/bin:/usr/local/bin:/usr/bin:/bin"
+WorkingDirectory=%h/Project/local-mcp-server/mcp-fabric
+ExecStart=/usr/bin/bash -c 'exec fabric --serve --address :${FABRIC_PORT:-8080}'
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
