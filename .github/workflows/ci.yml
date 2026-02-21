@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  shell-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scminification: true
+
+  python-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Run ruff
+        run: ruff check .
+
+  validate-scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x bin/*.sh
+
+      - name: Verify script syntax
+        run: |
+          bash -n bin/install.sh
+          bash -n bin/manager.sh
+          bash -n bin/fabric-start.sh
+
+      - name: Verify systemd services
+        run: |
+          echo "Validating systemd service files..."
+          # Basic syntax validation
+          grep -q "Description" systemd/fabric-rest.service
+          grep -q "ExecStart" systemd/fabric-rest.service
+
+      - name: Verify Makefile
+        run: |
+          echo "Checking Makefile targets..."
+          grep -q "^install:" Makefile
+          grep -q "^start:" Makefile
+          grep -q "^stop:" Makefile
