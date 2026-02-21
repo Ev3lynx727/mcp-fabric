@@ -11,7 +11,6 @@ readonly GREEN='\033[0;32m'
 readonly YELLOW='\033[1;33m'
 readonly BLUE='\033[0;34m'
 readonly CYAN='\033[0;36m'
-readonly MAGENTA='\033[0;35m'
 readonly NC='\033[0m'
 readonly BOLD='\033[1m'
 
@@ -33,7 +32,6 @@ print_banner() {
 EOF
 }
 
-FABRIC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 FABRIC_PORT="${FABRIC_PORT:-8080}"
 
 check_dependencies() {
